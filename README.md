@@ -25,7 +25,7 @@ The app consists of three main services:
 - **api_servis**: Backend service that handles database interaction and API routes.
 - **app_servis**: Frontend service that includes both the user and admin interfaces.
 
-## Technologies Used in the Application
+## Technologies Used
 
 - **Backend**: Node.js, Express.js
 - **Frontend**: Vue.js
