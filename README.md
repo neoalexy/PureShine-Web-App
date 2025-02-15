@@ -49,16 +49,21 @@ Users can:
 
 ### Admin Panel - All Services View
 On this page, the admin can view all available services with their basic details.
+![Azure Inbound Rules](docs/images/adminPanel1.PNG)
 
 ### Admin Panel - Reservations View
 A page showing all current reservations with options for managing them.
+![Azure Inbound Rules](docs/images/adminPanel2.PNG)
 
 ### Admin Panel - Service Editing
 A page for editing existing service details, such as name, description, and price.
+![Azure Inbound Rules](docs/images/adminPanel3.PNG)
 
 ### User Application - All Services View (Homepage)
 On the homepage, users can browse through all available services.
+![Azure Inbound Rules](docs/images/userApp1.PNG)
 
 ### User Application - Service Details
 A page displaying the details of a selected service, including its description, price, and the option to create a reservation.
+![Azure Inbound Rules](docs/images/userApp2.PNG)
 
