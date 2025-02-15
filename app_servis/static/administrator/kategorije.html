@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title> Vezba 1</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="main.css">
+  <script>
+    const cookies = document.cookie.split(';');
+    const token = cookies.find(cookie => cookie.trim().startsWith('token='));
+
+    // Funkcija za slanje GET zahteva sa tokenom
+    async function sendGetRequest() {
+        const headers = new Headers({
+            'Authorization': `Bearer ${token ? token.split('=')[1] : ''}`
+        });
+
+        try {
+            const response = await fetch('http://tvoj-api-server.com/api/messages', {
+                method: 'GET',
+                headers: headers,
+            });
+
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // Funkcija za slanje POST zahteva sa tokenom
+    async function sendPostRequest(data) {
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token ? token.split('=')[1] : ''}`
+        });
+
+        try {
+            const response = await fetch('http://tvoj-api-server.com/api/messages', {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            });
+
+            const responseData = await response.json();
+            console.log(responseData);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+</script>
+</head>
+<body>
+
+<main class="container">
+    <div class="row">
+      <nav class="navbar navbar-expand-sm bg-dark navbar-light">
+        <div class="container-fluid">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link link" href="index.html">Dashboard</a>
+            </li>
+           <li class="nav-item">
+              <a class="nav-link link" href="usluge.html">Usluge</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link " href="rezervacije.html">Rezervacije</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link active " href="kategorije.html">Kategorije</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link" href="opreme.html">Oprema</a>
+            </li>
+            <li class="nav-itemlg">
+              <a class="nav-link link" href="login.html">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  <h1>Spisak kategorija</h1>
+  <a href="nova-kategorija.html" class="btn btn-primary float-end">Nova kategorija</a>
+
+    <div>
+        <table class="table table-hover">
+            <thead>
+              <tr class="table-dark">
+                <th>Naziv</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id = "spisakKategorija">
+             <tr class="table-dark">
+                <!-- <td>Kuća</td>
+                <td><a href="kateogrija.html" class="btn btn-primary" >Izmeni</a></td>
+             </tr>
+             <tr class="table-dark">
+                <td>Stan</td>
+                <td><a href="kateogrija.html"class="btn btn-primary">Izmeni</a></td>
+              </tr>
+             <tr class="table-dark">
+                <td>Poslovni prostor</td>
+                <td><a href="kateogrija.html"class="btn btn-primary">Izmeni</a></td>
+            </tr> -->
+            </tbody>
+          </table>
+        </div>
+  </main>
+
+
+  <script>
+    window.addEventListener("load", function(){
+      fetch('http://localhost:9000/kategorija/')
+        .then(response => response.json())
+        .then(data => {
+          const spisakKategorija = document.getElementById("spisakKategorija");
+          for(let i = 0; i < data.length; i++) {
+            let tr = document.createElement("tr");
+            tr.classList.add("table-dark");
+  
+            let td1 = document.createElement("td");
+            td1.innerHTML = data[i].naziv;
+            tr.appendChild(td1);
+  
+            let td2 = document.createElement("td");
+            let link = document.createElement("a");
+            link.href = `kateogrija.html?id=${data[i].id}`;
+            link.innerHTML = `<button class="btn btn-primary">Izmeni</button>`;
+            td2.appendChild(link);
+            tr.appendChild(td2);
+  
+            let td3 = document.createElement("td");
+            let btnObrisi = document.createElement("button");
+            btnObrisi.classList.add("btn", "btn-danger"); 
+            btnObrisi.textContent = "Obriši";
+            btnObrisi.addEventListener("click", function() {
+              if (confirm("Potvrdite brisanje")){
+              const id = data[i].id;
+              fetch("http://localhost:9000/kategorija/"+id, {method:"DELETE"})
+              .then (resp => resp.json()).then(data =>{
+                window.location.href = "http://127.0.0.1:8000/administrator/kategorije.html";
+              })
+              .catch(err =>console.log(err));
+            }
+            else {
+              return;
+            }
+            
+            });
+            td3.appendChild(btnObrisi);
+            tr.appendChild(td3);
+  
+            spisakKategorija.appendChild(tr);
+          }
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        })
+    })
+  </script>
+
+</body>
+</html>

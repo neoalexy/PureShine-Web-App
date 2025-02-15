@@ -1,0 +1,48 @@
+body{
+    background-color: #cfd8d7;
+}
+
+main.container{
+    background-color: #FFB6C1;
+    box-shadow: 0px 0px 12px #2f3031;
+    border: 1px solid #2f3031;
+    margin-top: 15px;
+}
+
+.link{
+    color: #FFB6C1;
+}
+
+.nav-link.active{
+    color: gray !important;
+}
+.nav-itemlg a.nav-link.link {
+    color: #FF5C75;
+}
+
+.error{
+    border-color: red !important;
+}
+
+.success{
+    border-color: green !important;
+}
+.btn.btn-primary {
+    background-color: #6c757d;
+    border-color: #FFB6C1;
+    color: #FFB6C1;
+}
+
+
+.btn.btn-danger{
+    background-color: #FF5C75;
+    border-color: #6c757d;
+    color: #6c757d;
+}
+.btn-default{
+    color: #6c757d;
+}
+.btn.btn-success{
+    background-color: #2f3031;
+    border-color: #6c757d;
+}

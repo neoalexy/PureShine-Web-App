@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title> Vezba 1</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="main.css">
+  <script src="usluga.js"></script>
+</head>
+<body>
+
+<main class="container">
+    <div class="row">
+      <nav class="navbar navbar-expand-sm bg-dark navbar-light">
+        <div class="container-fluid">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link link" href="index.html">Dashboard</a>
+            </li>
+           <li class="nav-item">
+              <a class="nav-link link active" href="usluge.html">Usluge</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link " href="rezervacije.html">Rezervacije</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link " href="kategorije.html">Kategorije</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link" href="opreme.html">Oprema</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  <h1>Usluga</h1>
+  <form method=post action="http://postman-echo.com/post" id="forma">
+    <div>
+        <label for="naziv">Naziv:</label>
+        <input type="text" class="form-control" id="naziv" name="naziv" required>
+        <label for="naziv">Opis:</label>
+        <textarea name="opis" id="opis" class="form-control"></textarea>
+      <div class="row">
+        <div class="col-6">
+        <label for="naziv">Kategorija:</label>
+        <select name="kategorija" id="kategorija" class="form-select">
+        </select></div>
+        <div class="col-6">
+        <label for="naziv">Cena:</label>
+        <input type="number" min="0" step="1" required id="cena" name="cena" class="form-control">
+         </div>
+      </div>
+      <div>
+        <label for="naziv">Dodatna oprema:</label>
+        <div class="input-group mb-3">
+            <select class="form-select" id="spisak-opreme">
+            </select>    
+            <button class="btn btn-success" type="button" id="dodaj-opremu">+</button>
+        </div>
+        <div id="oprema">
+      </div>
+</div>
+
+
+        <div class="mt-3 mb-5">
+        <button class="btn btn-primary" onclick="sacuvajUslugu">Sačuvaj</button>
+        <a href="usluge.html" class="btn btn-link">Nazad</a>
+        <!-- <a href="#" class="btn btn-danger">Obriši</a> -->
+        </div>
+    </div>
+    <input type="hidden" name="oprema" id="oprema-input">
+  </form>
+</main>
+
+
+
+<script>
+  var id = null;
+
+  function sacuvajUslugu(){
+    window.location.href = "http://localhost:8000/usluge.html";
+  }
+
+  function validacija() {
+    var validno = true;
+    if (document.getElementById("naziv").value.length < 3) {
+      validno = false;
+      document.getElementById("naziv").classList.add("error");
+      document.getElementById("naziv").classList.remove("success");
+    } else {
+      document.getElementById("naziv").classList.add("success");
+      document.getElementById("naziv").classList.remove("error");
+    }
+    return validno;
+  }
+
+  // function dodajOpremu(oprema) {
+  // const selectOprema = document.getElementById("spisak-opreme");
+  // const option = document.createElement("option");
+  // option.value = oprema.id; 
+  // option.textContent = oprema.naziv;
+  // selectOprema.appendChild(option);
+// }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var url = new URL(window.location.href);
+    id = url.searchParams.get("id");
+    alert(id);
+
+    if (id) {
+      fetch("http://localhost:9000/usluga/" + id)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+
+          document.getElementById("naziv").value = data.naziv;
+          document.getElementById("opis").value = data.opis;
+          document.getElementById("kategorija").value = data.kategorija;
+          document.getElementById("cena").value = data.cena;
+
+          var kategorija_id = data.kategorija_id;
+          //for (let i = 0; i < data.oprema.length; i++) {
+         // dodajOpremu(data.oprema[i]);
+  //}
+
+          document.getElementById("forma").addEventListener("submit", function (event) {
+            event.preventDefault();
+            var validno = validacija();
+            if (!validno) {
+              return;
+            }
+            var izmenjenaUsluga = {
+              naziv: document.getElementById("naziv").value,
+              opis: document.getElementById("opis").value,
+              kategorija: document.getElementById("kategorija").value,
+              cena: document.getElementById("cena").value,
+              kategorija_id: kategorija_id 
+            };
+
+            fetch("http://localhost:9000/usluga/" + id, {
+              method: "PUT",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(izmenjenaUsluga)
+            })
+              .then(response => response.json())
+              .then(data => {
+                console.log("Usluga uspesno izmenjena:", data);
+                window.location.href = "http://127.0.0.1:8000/administrator/usluge.html";
+              })
+              .catch(err => {
+                console.error("Greska", err);
+              });
+          });
+        })
+        .catch(err => {
+          console.error('Greska', err);
+        });
+    }
+
+    fetch("http://localhost:9000/kategorija")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(kategorije => {
+      const selectKategorija = document.getElementById("kategorija");
+      kategorije.forEach(kategorija => {
+        const option = document.createElement("option");
+        option.value = kategorija.id; 
+        option.textContent = kategorija.naziv;
+        selectKategorija.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error("Greska:", error);
+    });
+
+    fetch("http://localhost:9000/oprema")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(oprema => {
+      const selectOprema = document.getElementById("spisak-opreme");
+      oprema.forEach(oprema => {
+        const option = document.createElement("option");
+        option.value = oprema.id; 
+        option.textContent = oprema.naziv;
+        selectOprema.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error("Greska:", error);
+    });
+  });
+
+  
+</script>
+
+
+</body>
+</html>
