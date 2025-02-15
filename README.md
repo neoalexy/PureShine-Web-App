@@ -15,7 +15,6 @@ This project was created as part of a University subject "Script languages" with
     - [Admin Panel - Service Editing](#admin-panel-service-editing)
     - [User Application - All Services View (Homepage)](#user-application-all-services-view-homepage)
     - [User Application - Service Details](#user-application-service-details)
-5. [How to Run the Application](#how-to-run-the-application)
 
 ## Application Architecture
 
